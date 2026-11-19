@@ -5,7 +5,7 @@ function string_params = init_string_params()
     string_length = 10;
     damping_coeff = 0.01;
     dx = string_length/(num_masses+1);
-    amplitude_Uf = 4;
+    amplitude_Uf = 0.5;
     omega_Uf = 3;
 
     % system rate functions
