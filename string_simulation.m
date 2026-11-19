@@ -49,9 +49,7 @@ function string_simulation(modality, vidflag)
     % for plotting mode shapes, create a tiled layout
     fig1 = figure(1);
     if modality > 0
-        t = tiledlayout(2,1,'TileSpacing','compact','Padding','compact');
-    else
-        title("String Simulation", Interpreter="latex")
+        tiledlayout(2,1,'TileSpacing','compact','Padding','compact');
     end
     clf
 
@@ -91,6 +89,7 @@ function string_simulation(modality, vidflag)
     axis(ax_size);
     xlabel("$X$ Position (-)", Interpreter="latex");
     ylabel("$Y$ Position (-)", Interpreter="latex");
+    title("String Simulation", Interpreter="latex")
     set(gca,'TickLabelInterpreter','latex')
     % xticks([-100 -80 -60 -40 -20 0 20 40 60])
     fontsize(scale=1.5)
