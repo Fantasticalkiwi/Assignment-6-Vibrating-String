@@ -1,0 +1,31 @@
+%plots the modal analysis graphs
+function modal_analysis()
+
+string_params = init_string_params;
+[M_mat,K_mat] = construct_2nd_order_matrices(string_params)
+%Use MATLAB to solve the generalized eigenvalue problem
+[U_mode,eigvals] = eig(K_mat,M_mat);
+omega_n = sqrt(-diag(eigvals));
+
+
+for i = 1:3
+    Umode = U_mode(:,i);
+    string_params._omega = (omega_n(i));
+    V0 = V_eq + epsilon.*[Umode;0;0;0];
+    % Non linear sim
+    %[tlist_nonlinear,Vlist_nonlinear,~,~] = simulate_box();
+    [tlist_nonlinear,Vlist_nonlinear] = ode45(my_rate_func,tspan,V0);
+    % Analytical modal solution
+    x_modal = V_eq(1) + epsilon*Umode(1)*cos(omega*tlist_nonlinear);
+    y_modal = V_eq(2) + epsilon*Umode(2)*cos(omega*tlist_nonlinear);
+    theta_modal = V_eq(3) + epsilon*Umode(3)*cos(omega*tlist_nonlinear);
+
+end
+end
+
+
+
+
+
+
+
