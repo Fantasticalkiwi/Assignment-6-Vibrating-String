@@ -1,5 +1,19 @@
-function string_params = init_string_params()
-    num_masses = 3;
+% creates a struct describing the parameters of the string system
+%INPUTS:
+% num_masses: an integer representing the number of masses on the string. 
+%             does not include the initial (stationary) or final (driving)
+%             mass.
+%OUTPUTS: 
+% string_params: a struct containing the system parameters describing the string
+%    string_params.n: number of masses
+%    string_params.M: total mass attached to the string
+%    string_params.Uf_func: function describing motion of end point
+%    string_params.dUfdt_func: time derivative of Uf
+%    string_params.Tf: %tension in string
+%    string_params.L: %length of string
+%    string_params.c: %damping coefficient
+%    string_params.dx: %horizontal spacing between masses
+function string_params = init_string_params(num_masses);
     total_mass = 1;
     tension_force = 50;
     string_length = 10;

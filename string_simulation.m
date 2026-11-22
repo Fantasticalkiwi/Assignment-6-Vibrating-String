@@ -1,6 +1,6 @@
 % Function that simulates the vibrating string.
-% INPUTS: None
-% OUTPUTS: None
+%INPUTS: None
+%OUTPUTS: None
 function string_simulation(modality, vidflag)
     % optional argument that defaults to off
     % if true or 1, will save video
@@ -9,27 +9,32 @@ function string_simulation(modality, vidflag)
         vidflag (1,:) double = 0;
     end
 
+    % hardcoded conditions that one may wish to alter
+    num_masses = 3;
+    ax_size = [-1,10,-2,2];
+    tspan = [0 10];
+
     % initialize string parameters
-    string_params = init_string_params();
+    string_params = init_string_params(num_masses);
     n = string_params.n;
     dx = string_params.dx;
     Uf_func = string_params.Uf_func;
 
-    %load string_params into rate function
-    my_rate_func = @(t_in,V_in) string_rate_func01(t_in,V_in,string_params);
+    % load string_params into rate function
+    func = @(t_in,V_in) string_rate_func01(t_in,V_in,string_params);
 
-    % initial conditions
-    U0 = [0; 0; 0];
-    dUdt0 = [2; -1; 2];
+    % set initial conditions
+    U0 = zeros(n,1);
+    dUdt0 = randi([-2 2],n,1);
     V0 = [U0;dUdt0];
-    tspan = [0 10];
     h_ref = 0.1;
     [BT_struct, p] = init_BT("Fehlberg");
     error_desired = 1e-6;
     growth_limit = 5;
+    epsilon = 0.1;
 
     % run the integration
-    [tlist,Vlist] = explicit_RK_variable_step_integration(my_rate_func,tspan,V0,...
+    [tlist,Vlist] = explicit_RK_variable_step_integration(func,tspan,V0,...
         h_ref,BT_struct,p,error_desired,growth_limit);
 
     if vidflag
@@ -37,19 +42,18 @@ function string_simulation(modality, vidflag)
         fname='string_vib.avi';
         input_fname = [mypath1, fname];
 
-        %create a videowriter, which will write frames to the animation file
+        % create a videowriter, which will write frames to the animation file
         writerObj = VideoWriter(input_fname);
         open(writerObj); %must call open before writing any frames
     end
 
     % initialize the current figure and save as object
-    % fig1 = figure(1);
-    ax_size = [-1,10,-2,2];
-
     % for plotting mode shapes, create a tiled layout
     fig1 = figure(1);
     if modality > 0
         tiledlayout(2,1,'TileSpacing','compact','Padding','compact');
+        [Mtlist,Mlist] = modal_analysis(num_masses,modality,epsilon,func,tspan, ...
+                        h_ref,BT_struct,p,error_desired,growth_limit);
     end
     clf
 
@@ -94,6 +98,7 @@ function string_simulation(modality, vidflag)
     % xticks([-100 -80 -60 -40 -20 0 20 40 60])
     fontsize(scale=1.5)
 
+    % plot the animation
     for j = 1:length(tlist)
         Uf = Uf_func(tlist(j));
         x_positions = linspace(0,dx*n+2,n+2);
@@ -104,14 +109,14 @@ function string_simulation(modality, vidflag)
 
         if modality > 0
             nexttile(2)
-            Uf = Uf_func(tlist(j));
+            Uf = Uf_func(Mtlist(j));
             x_positions = linspace(0,dx*n+2,n+2);
-            y_positions = [0;U(:,j);Uf];
+            y_positions = [0;Mlist(:,j);Uf];
             set(modal_string, 'xdata', x_positions, 'ydata', y_positions);
             axis equal;
-            axis(ax_size);            
-            drawnow;
+            axis(ax_size); 
 
+            drawnow;
             nexttile(1)
         else
             drawnow;

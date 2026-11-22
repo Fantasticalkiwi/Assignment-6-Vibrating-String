@@ -14,6 +14,7 @@
 %            BT_struct.C: vector of c_i values
 % p: how error scales with step size (error = k*hˆp)
 % error_desired: the desired local truncation error at each step
+% growth_limit: the highest factor the step size is allowed to grow by
 %OUTPUTS:
 % XB: the approximate value for X(t+h)
 % num_evals: A count of the number of times that you called
