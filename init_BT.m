@@ -1,11 +1,11 @@
-%This function computes the value of X at the next time step
-%for any arbitrary embedded RK method
+% This function computes the value of X at the next time step
+% for any arbitrary embedded RK method
 %INPUTS:
-%name: a string representing the name of the Butcher Tableau or associated 
-%      method
+% name: a string representing the name of the Butcher Tableau or associated 
+%       method
 %OUTPUTS:
-%tableau: a struct containing the A, B, and C values for the requested
-%         Butcher Tableau
+% tableau: a struct containing the A, B, and C values for the requested
+%          Butcher Tableau
 function [tableau, p] = init_BT(name)
     tableau = struct();
 
