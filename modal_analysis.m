@@ -24,7 +24,7 @@
 %OUTPUTS:
 % t_list: the vector of times, [t_start;t_1;t_2;...;.t_end] that the 
 %         y_positions are approximated at
-% V_list: the vector of positions, [y0';y1';y2';...;(y_end)'] at each time 
+% V_list: the vector of positions, [y0', y1', y2', ..., (y_end)'] at each time 
 %         step for each mass
 function [tlist,Vlist] = modal_analysis(string_params,modality,epsilon,func,tspan, ...
                         h_ref,BT_struct,p,error_desired,growth_limit)
@@ -37,6 +37,7 @@ function [tlist,Vlist] = modal_analysis(string_params,modality,epsilon,func,tspa
     
     % solve the generalized eigenvalue problem
     [U_mode,eigvals] = eig(K_mat,M_mat);
+    %resonance frequencies
     omega_n = sqrt(diag(eigvals));
     
 
@@ -47,10 +48,11 @@ function [tlist,Vlist] = modal_analysis(string_params,modality,epsilon,func,tspa
     tlist = explicit_RK_variable_step_integration(func,tspan,V0, ...
                         h_ref,BT_struct,p,error_desired,growth_limit);
     Vlist = [];
-    for m = 1:n
-        y_position = V_eq(1) + epsilon*U_mode(n,m)*cos(omega_n(m)*tlist);
+    for i = 1:n
+        y_position = V_eq(i) + epsilon*U_mode(i,m)*cos(omega_n(m)*tlist);
         Vlist(end+1,:) = y_position;
     end
+    
 end
 
 

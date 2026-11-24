@@ -39,23 +39,26 @@ function string_simulation(modality, vidflag)
 
     if vidflag
         mypath1 = 'C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-6-Vibrating-String';
-        fname='string_vib.avi';
+        fname=' string_vib.avi';
         input_fname = [mypath1, fname];
 
         % create a videowriter, which will write frames to the animation file
         writerObj = VideoWriter(input_fname);
         open(writerObj); %must call open before writing any frames
     end
-
+    clf
     % initialize the current figure and save as object
     % for plotting mode shapes, create a tiled layout
     fig1 = figure(1);
     if modality > 0
         tiledlayout(2,1,'TileSpacing','compact','Padding','compact');
-        [Mtlist,Mlist] = modal_analysis(num_masses,modality,epsilon,func,tspan, ...
+        [Mtlist,Mlist] = modal_analysis(string_params,modality,epsilon,func,tspan, ...
                         h_ref,BT_struct,p,error_desired,growth_limit);
+        size(Mtlist)
+        size(Mlist)
     end
-    clf
+
+    
 
     % forces the video to be high-quality
     set(fig1,'units','pixels','position',[0 0 1440 1080])
